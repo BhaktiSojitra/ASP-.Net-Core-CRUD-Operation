@@ -1,0 +1,52 @@
+﻿@model DataTable
+@using System.Data;
+
+<div>
+    <h2>Product Table</h2>
+</div>
+
+<div class="d-flex justify-content-end mb-3">
+    <a class="btn btn-primary me-2" asp-controller="Product" asp-action="AddEditProduct">Add New Product</a>
+    <a class="btn btn-secondary" asp-controller="Product" asp-action="ExportToExcel">Export To Excel</a>
+</div>
+
+<span class="text-danger">@TempData["ErrorMessage"]</span>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th scope="col">ProductID</th>
+            <th scope="col">Product Name</th>
+            <th scope="col">Product Price</th>
+            <th scope="col">Product Code</th>
+            <th scope="col">Description</th>
+            <th scope="col">UserID</th>
+            <th scope="col">Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(DataRow dr in Model.Rows)
+        {
+            <tr>
+                <td>@dr["ProductID"]</td>
+                <td>@dr["ProductName"]</td>
+                <td>@dr["ProductPrice"]</td>
+                <td>@dr["ProductCode"]</td>
+                <td>@dr["Description"]</td>
+                <td>@dr["UserID"]</td>
+                <td>
+                    <a class="btn btn-success" asp-controller="Product" asp-action="AddEditProduct" asp-route-ProductID="@dr["ProductID"]">Edit</a>
+                    <a class="btn btn-danger" asp-controller="Product" asp-action="ProductDelete" asp-route-ProductID="@dr["ProductID"]" onclick="return confirmDelete()">Delete</a> 
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section Scripts {
+    <script type="text/javascript">
+        function confirmDelete() {
+            return confirm('Are you sure you want to delete this product?');
+        }
+    </script>
+}

@@ -1,0 +1,57 @@
+﻿@model DataTable
+@using System.Data
+
+<div>
+    <h2>Order Table</h2>
+</div>
+
+<div class="d-flex justify-content-end mb-3">
+    <a class="btn btn-primary me-2" asp-controller="Order" asp-action="AddEditOrder">Add New Order</a>
+    <a class="btn btn-secondary" asp-controller="Order" asp-action="ExportToExcel">Export To Excel</a>
+</div>
+
+<span class="text-danger">@TempData["ErrorMessage"]</span>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th scope="col">OrderID</th>
+            <th scope="col">Order Number</th>
+            <th scope="col">Order Date</th>
+            <th scope="col">CustomerID</th>
+            <th scope="col">Payment Mode</th>
+            <th scope="col">Total Amount</th>
+            <th scope="col">Shipping Address</th>
+            <th scope="col">UserID</th>
+            <th scope="col">Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (DataRow dr in Model.Rows)
+        {
+            <tr>
+                <td>@dr["OrderID"]</td>
+                <td>@dr["OrderNumber"]</td>
+                <td>@dr["OrderDate"]</td>
+                <td>@dr["CustomerID"]</td>
+                <td>@dr["PaymentMode"]</td>
+                <td>@dr["TotalAmount"]</td>
+                <td>@dr["ShippingAddress"]</td>
+                <td>@dr["UserID"]</td>
+                <td>
+                    <div class="d-flex">
+                        <a class="btn btn-success me-2" asp-controller="User" asp-action="AddEditUser" asp-route-UserID="@dr["UserID"]">Edit</a>
+                        <a class="btn btn-danger" asp-controller="User" asp-action="UserDelete" asp-route-UserID="@dr["UserID"]" onclick="return confirmDelete()">Delete</a>
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section Scripts {
+    <script type="text/javascript">
+        function confirmDelete() {
+            return confirm('Are you sure you want to delete this product?');
+        }
+    </script>
+}

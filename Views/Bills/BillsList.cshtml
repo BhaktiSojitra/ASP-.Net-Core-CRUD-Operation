@@ -1,0 +1,55 @@
+﻿@model DataTable
+@using System.Data
+
+<div>
+    <h2>Bill Table</h2>
+</div>
+
+<div class="d-flex justify-content-end mb-3">
+    <a class="btn btn-primary me-2" asp-controller="Bills" asp-action="AddEditBills">Add New Bills</a>
+    <a class="btn btn-secondary" asp-controller="Bills" asp-action="ExportToExcel">Export To Excel</a>
+</div>
+
+<span class="text-danger">@TempData["ErrorMessage"]</span>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th scope="col">BillID</th>
+            <th scope="col">Bill Number</th>
+            <th scope="col">Bill Date</th>
+            <th scope="col">OrderID</th>
+            <th scope="col">Total Amount</th>
+            <th scope="col">Discount</th>
+            <th scope="col">Net Amount</th>
+            <th scope="col">UserID</th>
+            <th scope="col">Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (DataRow dr in Model.Rows)
+        {
+            <tr>
+                <td>@dr["BillID"]</td>
+                <td>@dr["BillNumber"]</td>
+                <td>@dr["BillDate"]</td>
+                <td>@dr["OrderID"]</td>
+                <td>@dr["TotalAmount"]</td>
+                <td>@dr["Discount"]</td>
+                <td>@dr["NetAmount"]</td>
+                <td>@dr["UserID"]</td>
+                <td>
+                    <a class="btn btn-success" asp-controller="Bills" asp-action="AddEditBills" asp-route-BillID="@dr["BillID"]">Edit</a>
+                    <a class="btn btn-danger" asp-controller="Bills" asp-action="BillDelete" asp-route-BillID="@dr["BillID"]" onclick="return confirmDelete()">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section Scripts {
+    <script type="text/javascript">
+        function confirmDelete() {
+            return confirm('Are you sure you want to delete this product?');
+        }
+    </script>
+}

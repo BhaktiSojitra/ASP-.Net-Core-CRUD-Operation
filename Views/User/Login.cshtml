@@ -1,0 +1,75 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout_Login.cshtml";
+}
+
+@model CRUD_Demo.Models.UserLoginModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<main>
+    <div class="container">
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="alert alert-danger">
+                @TempData["ErrorMessage"]
+            </div>
+        }
+        <section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-4 col-md-6 d-flex flex-column align-items-center justify-content-center">
+
+                        <div class="d-flex justify-content-center py-4">
+                            <a class="logo d-flex align-items-center w-auto">
+                                <img src="~/img/icon.jpg" alt="">
+                                <span class="d-none d-lg-block" style="color: #8D5524;">Coffee Shop</span>
+                            </a>
+                        </div>
+
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <div class="pt-4 pb-2">
+                                    <h5 class="card-title text-center pb-0 fs-4" style="color: #dda15e;">Login to Your Account</h5>
+                                    <p class="text-center small">Enter your user name & password to login</p>
+                                </div>
+
+                                <form class="row g-3 needs-validation" asp-action="UserLogin" asp-controller="User" method="post">
+
+                                    <div class="col-12">
+                                        <label for="yourUsername" class="form-label"><span class="text-danger">* </span>UserName</label>
+                                        <input type="text" asp-for="UserName" class="form-control" id="yourUsername">
+                                        <span asp-validation-for="UserName" class="text-danger"></span>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <label for="yourPassword" class="form-label"><span class="text-danger">* </span>Password</label>
+                                        <input type="password" asp-for="Password" class="form-control" id="yourPassword">
+                                        <span asp-validation-for="Password" class="text-danger"></span>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="remember" value="true" id="rememberMe">
+                                            <label class="form-check-label" for="rememberMe">Remember me</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <button class="btn w-100" type="submit" style="color:#faedcd;background-color:#d4a373">Login</button>
+                                    </div>
+                                    <div class="col-12">
+                                        <p class="small mb-0">
+                                            Don't have account? <a asp-controller="User" asp-action="Register">Create an account</a>
+                                        </p>
+                                    </div>
+                                </form>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+    </div>
+</main>
