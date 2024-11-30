@@ -39,8 +39,8 @@
                 <td>@dr["UserID"]</td>
                 <td>
                     <div class="d-flex">
-                        <a class="btn btn-success me-2" asp-controller="User" asp-action="AddEditUser" asp-route-UserID="@dr["UserID"]">Edit</a>
-                        <a class="btn btn-danger" asp-controller="User" asp-action="UserDelete" asp-route-UserID="@dr["UserID"]" onclick="return confirmDelete()">Delete</a>
+                        <a class="btn btn-success me-2" asp-controller="Order" asp-action="AddEditOrder" asp-route-OrderID="@dr["OrderID"]">Edit</a>
+                        <a class="btn btn-danger" asp-controller="Order" asp-action="OrderDelete" asp-route-OrderID="@dr["OrderID"]" onclick="return confirmDelete()">Delete</a>
                     </div>
                 </td>
             </tr>
