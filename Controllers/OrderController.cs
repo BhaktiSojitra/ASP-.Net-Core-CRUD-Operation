@@ -1,4 +1,4 @@
-﻿using CRUD_Demo.Models;
+using CRUD_Demo.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Data;
 using System.Data.SqlClient;
@@ -80,6 +80,7 @@ namespace CRUD_Demo.Controllers
                 command.CommandText = "PR_Order_DeleteByPK";
                 command.Parameters.AddWithValue("@OrderID", OrderID);
                 command.ExecuteNonQuery();
+                TempData["SuccessMessage"] = "Deleted successfully!";
             }
             catch (Exception ex)
             {
@@ -151,9 +152,9 @@ namespace CRUD_Demo.Controllers
             UserDropDown();
             OrderModel orderModel = new OrderModel();
 
-            if(OrderID != null)
+            if(OrderID != null && OrderID > 0)
             {
-                ViewBag.IsEditMode = true;
+                TempData["IsEditMode"] = true;
 
                 #region OrderByID
                 string connectionString = this.configuration.GetConnectionString("ConnectionString");
@@ -170,7 +171,7 @@ namespace CRUD_Demo.Controllers
                 foreach (DataRow dr in table.Rows)
                 {
                     orderModel.OrderNumber = Convert.ToInt32(dr["OrderNumber"]);
-                    orderModel.OrderDate = Convert.ToDateTime(@dr["OrderDate"]);
+                    
                     orderModel.CustomerID = Convert.ToInt32(@dr["CustomerID"]);
                     orderModel.PaymentMode = @dr["PaymentMode"].ToString();
                     orderModel.TotalAmount = Convert.ToDecimal(@dr["TotalAmount"]);
@@ -181,8 +182,10 @@ namespace CRUD_Demo.Controllers
             }
             else
             {
-                ViewBag.IsEditMode = false;
+                TempData["IsEditMode"] = false;
             }
+            orderModel.OrderDate = DateTime.Now;
+            TempData.Keep("IsEditMode");
             return View("AddEditOrder", orderModel);
         }
         #endregion
@@ -246,11 +249,7 @@ namespace CRUD_Demo.Controllers
                     {
                         command.CommandText = "PR_Order_Insert";
                         command.Parameters.Add("@OrderNumber", SqlDbType.Int).Value = orderModel.OrderNumber;
-                        command.Parameters.Add("@OrderDate", SqlDbType.DateTime).Value = orderModel.OrderDate;
                         command.Parameters.Add("@CustomerID", SqlDbType.Int).Value = orderModel.CustomerID;
-                        command.Parameters.Add("@PaymentMode", SqlDbType.VarChar).Value = orderModel.PaymentMode;
-                        command.Parameters.Add("@TotalAmount", SqlDbType.Decimal).Value = orderModel.TotalAmount;
-                        command.Parameters.Add("@ShippingAddress", SqlDbType.VarChar).Value = orderModel.ShippingAddress;
                         command.Parameters.Add("@UserID", SqlDbType.Int).Value = orderModel.UserID;
 
                         TempData["SuccessMessage"] = "Order added successfully!";
@@ -259,13 +258,14 @@ namespace CRUD_Demo.Controllers
                     {
                         command.CommandText = "PR_Order_UpdateByPK";
                         command.Parameters.Add("@OrderID", SqlDbType.Int).Value = orderModel.OrderID;
-                        command.Parameters.Add("@OrderDate", SqlDbType.DateTime).Value = orderModel.OrderDate;
-                        command.Parameters.Add("@PaymentMode", SqlDbType.VarChar).Value = orderModel.PaymentMode;
-                        command.Parameters.Add("@TotalAmount", SqlDbType.Decimal).Value = orderModel.TotalAmount;
-                        command.Parameters.Add("@ShippingAddress", SqlDbType.VarChar).Value = orderModel.ShippingAddress;
 
                         TempData["SuccessMessage"] = "Order updated successfully!";
                     }
+                    command.Parameters.Add("@OrderDate", SqlDbType.DateTime).Value = orderModel.OrderDate;
+                    command.Parameters.Add("@PaymentMode", SqlDbType.VarChar).Value = orderModel.PaymentMode;
+                    command.Parameters.Add("@TotalAmount", SqlDbType.Decimal).Value = orderModel.TotalAmount;
+                    command.Parameters.Add("@ShippingAddress", SqlDbType.VarChar).Value = orderModel.ShippingAddress;
+
                     command.ExecuteNonQuery();
                     return RedirectToAction("AddEditOrder", new { OrderID = orderModel.OrderID });
                 }
