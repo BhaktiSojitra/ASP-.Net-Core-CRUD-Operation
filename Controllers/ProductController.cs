@@ -80,6 +80,7 @@ namespace CRUD_Demo.Controllers
                 command.CommandText = "PR_Product_DeleteByPK";
                 command.Parameters.AddWithValue("@ProductID", ProductID);
                 command.ExecuteNonQuery();
+                TempData["SuccessMessage"] = "Deleted successfully!";
             }
             catch (Exception ex)
             {
