@@ -1,4 +1,4 @@
-﻿using CRUD_Demo.Models;
+using CRUD_Demo.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Data;
 using System.Data.SqlClient;
@@ -122,9 +122,9 @@ namespace CRUD_Demo.Controllers
             UserDropDown();
             ProductModel productModel = new ProductModel();
 
-            if (ProductID != null)
+            if (ProductID != null && ProductID > 0)
             {
-                ViewBag.IsEditMode = true;
+                TempData["IsEditMode"] = true;
 
                 #region ProductByID
                 string connectionString = this.configuration.GetConnectionString("ConnectionString");
@@ -150,9 +150,10 @@ namespace CRUD_Demo.Controllers
             }
             else
             {
-                ViewBag.IsEditMode = false;
+                TempData["IsEditMode"] = false;
             }
-            return View("AddEditProduct", productModel);
+            TempData.Keep("IsEditMode");
+            return View(productModel);
         }
         #endregion
 
@@ -201,10 +202,6 @@ namespace CRUD_Demo.Controllers
                     if (productModel.ProductID == null)
                     {
                         command.CommandText = "PR_Product_Insert";
-                        command.Parameters.Add("@ProductName", SqlDbType.VarChar).Value = productModel.ProductName;
-                        command.Parameters.Add("@ProductPrice", SqlDbType.Decimal).Value = productModel.ProductPrice;
-                        command.Parameters.Add("@ProductCode", SqlDbType.VarChar).Value = productModel.ProductCode;
-                        command.Parameters.Add("@Description", SqlDbType.VarChar).Value = productModel.Description;
                         command.Parameters.Add("@UserID", SqlDbType.Int).Value = productModel.UserID;
 
                         TempData["SuccessMessage"] = "Product added successfully!";
@@ -213,13 +210,13 @@ namespace CRUD_Demo.Controllers
                     {
                         command.CommandText = "PR_Product_UpdateByPK";
                         command.Parameters.Add("@ProductID", SqlDbType.Int).Value = productModel.ProductID;
-                        command.Parameters.Add("@ProductName", SqlDbType.VarChar).Value = productModel.ProductName;
-                        command.Parameters.Add("@ProductPrice", SqlDbType.Decimal).Value = productModel.ProductPrice;
-                        command.Parameters.Add("@ProductCode", SqlDbType.VarChar).Value = productModel.ProductCode;
-                        command.Parameters.Add("@Description", SqlDbType.VarChar).Value = productModel.Description;
 
                         TempData["SuccessMessage"] = "Product updated successfully!";
                     }
+                    command.Parameters.Add("@ProductName", SqlDbType.VarChar).Value = productModel.ProductName;
+                    command.Parameters.Add("@ProductPrice", SqlDbType.Decimal).Value = productModel.ProductPrice;
+                    command.Parameters.Add("@ProductCode", SqlDbType.VarChar).Value = productModel.ProductCode;
+                    command.Parameters.Add("@Description", SqlDbType.VarChar).Value = productModel.Description;
 
                     command.ExecuteNonQuery();
                     return RedirectToAction("AddEditProduct", new { ProductID = productModel.ProductID });
