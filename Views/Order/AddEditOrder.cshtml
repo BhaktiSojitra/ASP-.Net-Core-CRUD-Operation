@@ -1,4 +1,4 @@
-﻿@model CRUD_Demo.Models.OrderModel
+@model CRUD_Demo.Models.OrderModel
 
 @if (TempData["SuccessMessage"] != null)
 {
@@ -10,7 +10,7 @@
 
 <div class="card">
     <div class="card-body">
-        <h5 class="card-title">@((ViewBag.IsEditMode == true) ? "Edit Order" : "Add New Order")</h5>
+        <h5 class="card-title">@((bool)TempData["IsEditMode"] ? "Edit Order" : "Add New Order")</h5>
         <form asp-controller="Order" asp-action="OrderSave" method="post">
             <div class="row mb-3">
                 <input type="hidden" asp-for="OrderID" />
@@ -23,24 +23,42 @@
             <div class="row mb-3">
                 <label class="col-sm-2 col-form-label"><span class="text-danger">*</span>Order Number</label>
                 <div class="col-sm-10">
-                    <input type="number" class="form-control" asp-for="OrderNumber">
+                    @if ((bool)TempData["IsEditMode"]) // edit mode
+                    {
+                        <input type="number" class="form-control" asp-for="OrderNumber" disabled />
+                    }
+                    else // insert mode
+                    {
+                        <input type="number" class="form-control" asp-for="OrderNumber" />
+                    }
                     <span asp-validation-for="OrderNumber" class="text-danger"></span>
                 </div>
             </div>
             <div class="row mb-3">
                 <label class="col-sm-2 col-form-label"><span class="text-danger">*</span>CustomerID</label>
                 <div class="col-sm-10">
-                    <select class="form-select" asp-for="CustomerID" asp-items="@(new SelectList(ViewBag.CustomerList, "CustomerID", "CustomerName"))">
-                        <option selected value="">Select Customer ID</option>
-                    </select>
+                    @if ((bool)TempData["IsEditMode"])
+                    {
+                        <!-- Dropdown in edit mode (disabled) -->
+                        <select class="form-select" asp-for="CustomerID" asp-items="@(new SelectList(ViewBag.CustomerList, "CustomerID", "CustomerName"))" disabled>
+                            <option value="" selected>Select Customer ID</option>
+                        </select>
+                    }
+                    else
+                    {
+                        <!-- Dropdown in insert mode -->
+                        <select class="form-select" asp-for="CustomerID" asp-items="@(new SelectList(ViewBag.CustomerList, "CustomerID", "CustomerName"))">
+                            <option value="" selected>Select Customer ID</option>
+                        </select>
+                    }
                     <span asp-validation-for="CustomerID" class="text-danger"></span>
                 </div>
             </div>
             <div class="row mb-3">
                 <label class="col-sm-2 col-form-label"><span class="text-danger">*</span>Payment Mode</label>
                 <div class="col-sm-10">
-                    <select class="form-select" asp-for="PaymentMode" asp-items="@(new SelectList(new List<string> { "Cash", "Credit Card", "Debit Card", "Net Banking", "UPI" }))">
-                        <option selected value="">Select Payment Mode</option>
+                    <select class="form-select" asp-for="PaymentMode" asp-items="@(new SelectList(new List<string> { "Cash", "Credit Card", "Debit Card", "Net Banking", "UPI", "PayPal" }))">
+                        <option value="" selected>Select Payment Mode</option>
                     </select>
                     <span asp-validation-for="PaymentMode" class="text-danger"></span>
                 </div>
@@ -62,9 +80,20 @@
             <div class="row mb-3">
                 <label class="col-sm-2 col-form-label"><span class="text-danger">*</span>UserID</label>
                 <div class="col-sm-10">
-                    <select class="form-select" asp-for="UserID" asp-items="@(new SelectList(ViewBag.UserList, "UserID", "UserName"))">
-                        <option selected value="">Select User ID</option>
-                    </select>
+                    @if ((bool)TempData["IsEditMode"])
+                    {
+                        <!-- Dropdown in edit mode (disabled) -->
+                        <select class="form-select" asp-for="UserID" asp-items="@(new SelectList(ViewBag.UserList, "UserID", "UserName"))" disabled>
+                            <option value="" selected>Select User ID</option>
+                        </select>
+                    }
+                    else
+                    {
+                        <!-- Dropdown in insert mode -->
+                        <select class="form-select" asp-for="UserID" asp-items="@(new SelectList(ViewBag.UserList, "UserID", "UserName"))">
+                            <option value="" selected>Select User ID</option>
+                        </select>
+                    }
                     <span asp-validation-for="UserID" class="text-danger"></span>
                 </div>
             </div>
@@ -72,7 +101,7 @@
                 <label class="col-sm-2 col-form-label"></label>
                 <div class="col-sm-10">
                     <button type="submit" class="btn btn-success">
-                        @((ViewBag.IsEditMode == true) ? "Edit" : "Add")
+                        @((bool)TempData["IsEditMode"] ? "Edit" : "Add")
                     </button>
                     <a class="btn btn-danger" asp-controller="Order" asp-action="OrderList">Back</a>
                 </div>
@@ -83,7 +112,7 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        var isEditMode = "@ViewBag.IsEditMode";
+        var isEditMode = "@((bool)TempData["IsEditMode"])";
         var successMessage = "@TempData["SuccessMessage"]";
 
         // If it's Add mode and there's a success message, reset the form
