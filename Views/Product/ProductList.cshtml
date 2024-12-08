@@ -1,4 +1,4 @@
-﻿@model DataTable
+@model DataTable
 @using System.Data;
 
 <div>
@@ -10,7 +10,21 @@
     <a class="btn btn-secondary" asp-controller="Product" asp-action="ExportToExcel">Export To Excel</a>
 </div>
 
-<span class="text-danger">@TempData["ErrorMessage"]</span>
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["SuccessMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        @TempData["ErrorMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
 
 <table class="table table-bordered">
     <thead>
@@ -25,7 +39,7 @@
         </tr>
     </thead>
     <tbody>
-        @foreach(DataRow dr in Model.Rows)
+        @foreach (DataRow dr in Model.Rows)
         {
             <tr>
                 <td>@dr["ProductID"]</td>
@@ -36,7 +50,7 @@
                 <td>@dr["UserID"]</td>
                 <td>
                     <a class="btn btn-success" asp-controller="Product" asp-action="AddEditProduct" asp-route-ProductID="@dr["ProductID"]">Edit</a>
-                    <a class="btn btn-danger" asp-controller="Product" asp-action="ProductDelete" asp-route-ProductID="@dr["ProductID"]" onclick="return confirmDelete()">Delete</a> 
+                    <a class="btn btn-danger" asp-controller="Product" asp-action="ProductDelete" asp-route-ProductID="@dr["ProductID"]" onclick="return confirmDelete()">Delete</a>
                 </td>
             </tr>
         }
