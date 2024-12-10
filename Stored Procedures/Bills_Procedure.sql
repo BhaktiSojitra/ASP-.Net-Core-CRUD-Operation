@@ -49,11 +49,12 @@ EXEC [dbo].[PR_Bills_SelectByPK] 3
 -- insert
 CREATE PROCEDURE [dbo].[PR_Bills_Insert]
 	@BillNumber Varchar(100),
+	@BillDate Datetime,
 	@OrderID INT,
 	@TotalAmount DECIMAL(10,2),
 	@Discount decimal(10,2) ,
 	@NetAmount decimal(10,2) ,
-    @UserID INT
+    	@UserID INT
 AS
 BEGIN
     INSERT INTO [dbo].[LOC_Bills] 
@@ -69,7 +70,7 @@ BEGIN
     VALUES 
 	(
 		@BillNumber ,
-		getdate() ,
+		@BillDate ,
 		@OrderID ,
 		@TotalAmount ,
 		@Discount ,
