@@ -103,7 +103,7 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        var isEditMode = "@ViewBag.IsEditMode";
+        var isEditMode = "@((bool)TempData["IsEditMode"])";
         var successMessage = "@TempData["SuccessMessage"]";
 
         // If it's Add mode and there's a success message, reset the form
