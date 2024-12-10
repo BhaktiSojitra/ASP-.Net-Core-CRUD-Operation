@@ -171,7 +171,7 @@ namespace CRUD_Demo.Controllers
                 foreach (DataRow dr in table.Rows)
                 {
                     orderModel.OrderNumber = Convert.ToInt32(dr["OrderNumber"]);
-                    
+                    orderModel.OrderDate = Convert.ToDateTime(dr["OrderDate"]);
                     orderModel.CustomerID = Convert.ToInt32(@dr["CustomerID"]);
                     orderModel.PaymentMode = @dr["PaymentMode"].ToString();
                     orderModel.TotalAmount = Convert.ToDecimal(@dr["TotalAmount"]);
@@ -183,8 +183,8 @@ namespace CRUD_Demo.Controllers
             else
             {
                 TempData["IsEditMode"] = false;
+                orderModel.OrderDate = DateTime.Now;
             }
-            orderModel.OrderDate = DateTime.Now;
             TempData.Keep("IsEditMode");
             return View("AddEditOrder", orderModel);
         }
@@ -193,18 +193,12 @@ namespace CRUD_Demo.Controllers
         #region OrderSave
         public IActionResult OrderSave(OrderModel orderModel)
         {
-            ModelState.Remove("OrderDate");
             ModelState.Remove("OrderNumber");
             ModelState.Remove("CustomerID");
             ModelState.Remove("PaymentMode");
             ModelState.Remove("TotalAmount");
             ModelState.Remove("ShippingAddress");
             ModelState.Remove("UserID");
-
-            if (orderModel.OrderDate < DateTime.Now.Date)
-            {
-                ModelState.AddModelError("OrderDate", "Please Enter Today Date and Time");
-            }
 
             if (orderModel.OrderNumber <= 0)
             {
