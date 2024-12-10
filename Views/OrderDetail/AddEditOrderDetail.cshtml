@@ -1,4 +1,4 @@
-﻿@model CRUD_Demo.Models.OrderDetailModel
+@model CRUD_Demo.Models.OrderDetailModel
 
 @if (TempData["SuccessMessage"] != null)
 {
@@ -10,24 +10,46 @@
 
 <div class="card">
     <div class="card-body">
-        <h5 class="card-title">@((ViewBag.IsEditMode == true) ? "Edit Order Detail" : "Add New Order Detail")</h5>
+        <h5 class="card-title">@((bool)TempData["IsEditMode"] ? "Edit Order Detail" : "Add New Order Detail")</h5>
         <form asp-controller="OrderDetail" asp-action="OrderDetailSave" method="post">
             <div class="row mb-3">
                 <input type="hidden" asp-for="OrderDetailID" />
                 <label class="col-sm-2 col-form-label"><span class="text-danger">*</span>OrderID</label>
                 <div class="col-sm-10">
-                    <select class="form-select" asp-for="OrderID" asp-items="@(new SelectList(ViewBag.OrderList, "OrderID", "OrderNumber"))">
-                        <option selected value="">Select Order ID</option>
-                    </select>
+                    @if ((bool)TempData["IsEditMode"])
+                    {
+                        <!-- Dropdown in edit mode (disabled) -->
+                        <select class="form-select" asp-for="OrderID" asp-items="@(new SelectList(ViewBag.OrderList, "OrderID", "OrderNumber"))" disabled>
+                            <option value="" selected>Select Order ID</option>
+                        </select>
+                    }
+                    else
+                    {
+                        <!-- Dropdown in insert mode -->
+                        <select class="form-select" asp-for="OrderID" asp-items="@(new SelectList(ViewBag.OrderList, "OrderID", "OrderNumber"))">
+                            <option value="" selected>Select Order ID</option>
+                        </select>
+                    }
                     <span asp-validation-for="OrderID" class="text-danger"></span>
                 </div> 
             </div>
             <div class="row mb-3">
                 <label class="col-sm-2 col-form-label"><span class="text-danger">*</span>ProductID</label>
                 <div class="col-sm-10">
-                    <select class="form-select" asp-for="ProductID" asp-items="@(new SelectList(ViewBag.ProductList, "ProductID", "ProductName"))">
-                        <option selected value="">Select Product ID</option>
-                    </select>
+                    @if ((bool)TempData["IsEditMode"])
+                    {
+                        <!-- Dropdown in edit mode (disabled) -->
+                        <select class="form-select" asp-for="ProductID" asp-items="@(new SelectList(ViewBag.ProductList, "ProductID", "ProductName"))" disabled>
+                            <option value="" selected>Select Product ID</option>
+                        </select>
+                    }
+                    else
+                    {
+                        <!-- Dropdown in insert mode -->
+                        <select class="form-select" asp-for="ProductID" asp-items="@(new SelectList(ViewBag.ProductList, "ProductID", "ProductName"))">
+                            <option value="" selected>Select Product ID</option>
+                        </select>
+                    }
                     <span asp-validation-for="ProductID" class="text-danger"></span>
                 </div>
             </div>
@@ -55,9 +77,20 @@
             <div class="row mb-3">
                 <label class="col-sm-2 col-form-label"><span class="text-danger">*</span>UserID</label>
                 <div class="col-sm-10">
-                    <select class="form-select" asp-for="UserID" asp-items="@(new SelectList(ViewBag.UserList, "UserID", "UserName"))">
-                        <option selected value="">Select User ID</option>
-                    </select>
+                    @if ((bool)TempData["IsEditMode"])
+                    {
+                        <!-- Dropdown in edit mode (disabled) -->
+                        <select class="form-select" asp-for="UserID" asp-items="@(new SelectList(ViewBag.UserList, "UserID", "UserName"))" disabled>
+                            <option value="" selected>Select User ID</option>
+                        </select>
+                    }
+                    else
+                    {
+                        <!-- Dropdown in insert mode -->
+                        <select class="form-select" asp-for="UserID" asp-items="@(new SelectList(ViewBag.UserList, "UserID", "UserName"))">
+                            <option value="" selected>Select User ID</option>
+                        </select>
+                    }
                     <span asp-validation-for="UserID" class="text-danger"></span>
                 </div>
             </div>
@@ -65,7 +98,7 @@
                 <label class="col-sm-2 col-form-label"></label>
                 <div class="col-sm-10">
                     <button type="submit" class="btn btn-success" id="btnSubmit">
-                        @((ViewBag.IsEditMode == true) ? "Edit" : "Add")
+                        @((bool)TempData["IsEditMode"] ? "Edit" : "Add")
                     </button>
                     <a class="btn btn-danger" asp-controller="OrderDetail" asp-action="OrderDetailList">Back</a>
                 </div>
