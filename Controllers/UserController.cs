@@ -1,9 +1,8 @@
-﻿using CRUD_Demo.Models;
+using CRUD_Demo.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Data.SqlClient;
 using System.Data;
 using ClosedXML.Excel;
-using Irony.Parsing;
 
 namespace CRUD_Demo.Controllers
 {
@@ -87,6 +86,7 @@ namespace CRUD_Demo.Controllers
                 command.CommandText = "PR_User_DeleteByPK";
                 command.Parameters.AddWithValue("@UserID", UserID);
                 command.ExecuteNonQuery();
+                TempData["SuccessMessage"] = "Deleted successfully!";
             }
             catch (Exception ex)
             {
@@ -104,7 +104,7 @@ namespace CRUD_Demo.Controllers
 
             if (UserID != null)
             {
-                ViewBag.IsEditMode = true;
+                TempData["IsEditMode"] = true;
 
                 #region UserByID
                 string connectionString = this.configuration.GetConnectionString("ConnectionString");
@@ -131,8 +131,9 @@ namespace CRUD_Demo.Controllers
             }
             else
             {
-                ViewBag.IsEditMode = false;
+                TempData["IsEditMode"] = false;
             }
+            TempData.Keep("IsEditMode");
             return View("AddEditUser", userModel);
         }
         #endregion
@@ -202,7 +203,6 @@ namespace CRUD_Demo.Controllers
                     return RedirectToAction("AddEditUser", new { UserID = userModel.UserID });
                 }
             }
-
             return View("AddEditUser", userModel);
         }
         #endregion
