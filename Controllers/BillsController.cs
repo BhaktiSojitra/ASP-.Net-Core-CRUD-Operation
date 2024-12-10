@@ -1,4 +1,4 @@
-﻿using CRUD_Demo.Models;
+using CRUD_Demo.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Data.SqlClient;
 using System.Data;
@@ -81,6 +81,7 @@ namespace CRUD_Demo.Controllers
                 command.CommandText = "PR_Bills_DeleteByPK";
                 command.Parameters.AddWithValue("@BillID", BillID);
                 command.ExecuteNonQuery();
+                TempData["SuccessMessage"] = "Deleted successfully!";
             }
             catch (Exception ex)
             {
@@ -153,7 +154,7 @@ namespace CRUD_Demo.Controllers
 
             if(BillID != null)
             {
-                ViewBag.IsEditMode = true;
+                TempData["IsEditMode"] = true;
 
                 #region BillsByID
                 string connectionString = this.configuration.GetConnectionString("ConnectionString");
@@ -181,8 +182,10 @@ namespace CRUD_Demo.Controllers
             }
             else
             {
-                ViewBag.IsEditMode = false;
+                billsModel.BillDate = DateTime.Now;
+                TempData["IsEditMode"] = false;
             }
+            TempData.Keep("IsEditMode");
             return View("AddEditBills", billsModel);
         }
         #endregion
@@ -191,7 +194,6 @@ namespace CRUD_Demo.Controllers
         public IActionResult BillsSave(BillsModel billsModel)
         {
             ModelState.Remove("BillNumber");
-            ModelState.Remove("BillDate");
             ModelState.Remove("OrderID");
             ModelState.Remove("TotalAmount");
             ModelState.Remove("Discount");
@@ -201,11 +203,6 @@ namespace CRUD_Demo.Controllers
             if (string.IsNullOrEmpty(billsModel.BillNumber))
             {
                 ModelState.AddModelError("BillNumber", "Please Enter Bill Number");
-            }
-
-            if (billsModel.BillDate < DateTime.Now.Date)
-            {
-                ModelState.AddModelError("BillDate", "Please Enter Today Date and Time");
             }
 
             if (billsModel.OrderID <= 0)
@@ -243,13 +240,8 @@ namespace CRUD_Demo.Controllers
                     command.CommandType = CommandType.StoredProcedure;
                     if (billsModel.BillID == null)
                     {
-                        command.CommandText = "PR_Product_Insert";
-                        command.Parameters.Add("@BillNumber", SqlDbType.VarChar).Value = billsModel.BillNumber;
-                        command.Parameters.Add("@BillDate", SqlDbType.DateTime).Value = billsModel.BillDate;
+                        command.CommandText = "PR_Bills_Insert";                       
                         command.Parameters.Add("@OrderID", SqlDbType.Int).Value = billsModel.OrderID;
-                        command.Parameters.Add("@TotalAmount", SqlDbType.Decimal).Value = billsModel.TotalAmount;
-                        command.Parameters.Add("@Discount", SqlDbType.Decimal).Value = billsModel.Discount;
-                        command.Parameters.Add("@NetAmount", SqlDbType.Decimal).Value = billsModel.NetAmount;
                         command.Parameters.Add("@UserID", SqlDbType.Int).Value = billsModel.UserID;
 
                         TempData["SuccessMessage"] = "Bill added successfully!";
@@ -258,14 +250,14 @@ namespace CRUD_Demo.Controllers
                     {
                         command.CommandText = "PR_Bills_UpdateByPK";
                         command.Parameters.Add("@BillID", SqlDbType.Int).Value = billsModel.BillID;
-                        command.Parameters.Add("@BillNumber", SqlDbType.VarChar).Value = billsModel.BillNumber;
-                        command.Parameters.Add("@BillDate", SqlDbType.DateTime).Value = billsModel.BillDate;
-                        command.Parameters.Add("@TotalAmount", SqlDbType.Decimal).Value = billsModel.TotalAmount;
-                        command.Parameters.Add("@Discount", SqlDbType.Decimal).Value = billsModel.Discount;
-                        command.Parameters.Add("@NetAmount", SqlDbType.Decimal).Value = billsModel.NetAmount;
 
                         TempData["SuccessMessage"] = "Bill updated successfully!";
                     }
+                    command.Parameters.Add("@BillNumber", SqlDbType.VarChar).Value = billsModel.BillNumber;
+                    command.Parameters.Add("@BillDate", SqlDbType.DateTime).Value = billsModel.BillDate;
+                    command.Parameters.Add("@TotalAmount", SqlDbType.Decimal).Value = billsModel.TotalAmount;
+                    command.Parameters.Add("@Discount", SqlDbType.Decimal).Value = billsModel.Discount;
+                    command.Parameters.Add("@NetAmount", SqlDbType.Decimal).Value = billsModel.NetAmount;
 
                     command.ExecuteNonQuery();
                     return RedirectToAction("AddEditBills", new { BillID = billsModel.BillID });
