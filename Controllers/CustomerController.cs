@@ -1,4 +1,4 @@
-﻿using CRUD_Demo.Models;
+using CRUD_Demo.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Data.SqlClient;
 using System.Data;
@@ -81,6 +81,7 @@ namespace CRUD_Demo.Controllers
                 command.CommandText = "PR_Customer_DeleteByPK";
                 command.Parameters.AddWithValue("@CustomerID", CustomerID);
                 command.ExecuteNonQuery();
+                TempData["SuccessMessage"] = "Deleted successfully!";
             }
             catch (Exception ex)
             {
@@ -125,7 +126,7 @@ namespace CRUD_Demo.Controllers
             
             if(CustomerID != null)
             {
-                ViewBag.IsEditMode = true;
+                TempData["IsEditMode"] = true;
 
                 #region CustomerByID
                 string connectionString = this.configuration.GetConnectionString("ConnectionString");
@@ -155,8 +156,9 @@ namespace CRUD_Demo.Controllers
             }
             else
             {
-                ViewBag.IsEditMode = false;
+                TempData["IsEditMode"] = false;
             }
+            TempData.Keep("IsEditMode");
             return View("AddEditCustomer", customerModel);
         }
         #endregion
@@ -230,14 +232,6 @@ namespace CRUD_Demo.Controllers
                     if (customerModel.CustomerID == null)
                     {
                         command.CommandText = "PR_Customer_Insert";
-                        command.Parameters.Add("@CustomerName", SqlDbType.VarChar).Value = customerModel.CustomerName;
-                        command.Parameters.Add("@HomeAddress", SqlDbType.VarChar).Value = customerModel.HomeAddress;
-                        command.Parameters.Add("@Email", SqlDbType.VarChar).Value = customerModel.Email;
-                        command.Parameters.Add("@MobileNo", SqlDbType.VarChar).Value = customerModel.MobileNo;
-                        command.Parameters.Add("@GSTNo", SqlDbType.VarChar).Value = customerModel.GSTNo;
-                        command.Parameters.Add("@CityName", SqlDbType.VarChar).Value = customerModel.CityName;
-                        command.Parameters.Add("@PinCode", SqlDbType.VarChar).Value = customerModel.PinCode;
-                        command.Parameters.Add("@NetAmount", SqlDbType.Decimal).Value = customerModel.NetAmount;
                         command.Parameters.Add("@UserID", SqlDbType.Int).Value = customerModel.UserID;
 
                         TempData["SuccessMessage"] = "Customer added successfully!";
@@ -246,17 +240,17 @@ namespace CRUD_Demo.Controllers
                     {
                         command.CommandText = "PR_Customer_UpdateByPK";
                         command.Parameters.Add("@customerID", SqlDbType.Int).Value = customerModel.CustomerID;
-                        command.Parameters.Add("@CustomerName", SqlDbType.VarChar).Value = customerModel.CustomerName;
-                        command.Parameters.Add("@HomeAddress", SqlDbType.VarChar).Value = customerModel.HomeAddress;
-                        command.Parameters.Add("@Email", SqlDbType.VarChar).Value = customerModel.Email;
-                        command.Parameters.Add("@MobileNo", SqlDbType.VarChar).Value = customerModel.MobileNo;
-                        command.Parameters.Add("@GSTNo", SqlDbType.VarChar).Value = customerModel.GSTNo;
-                        command.Parameters.Add("@CityName", SqlDbType.VarChar).Value = customerModel.CityName;
-                        command.Parameters.Add("@PinCode", SqlDbType.VarChar).Value = customerModel.PinCode;
-                        command.Parameters.Add("@NetAmount", SqlDbType.Decimal).Value = customerModel.NetAmount;
 
                         TempData["SuccessMessage"] = "Customer updated successfully!";
                     }
+                    command.Parameters.Add("@CustomerName", SqlDbType.VarChar).Value = customerModel.CustomerName;
+                    command.Parameters.Add("@HomeAddress", SqlDbType.VarChar).Value = customerModel.HomeAddress;
+                    command.Parameters.Add("@Email", SqlDbType.VarChar).Value = customerModel.Email;
+                    command.Parameters.Add("@MobileNo", SqlDbType.VarChar).Value = customerModel.MobileNo;
+                    command.Parameters.Add("@GSTNo", SqlDbType.VarChar).Value = customerModel.GSTNo;
+                    command.Parameters.Add("@CityName", SqlDbType.VarChar).Value = customerModel.CityName;
+                    command.Parameters.Add("@PinCode", SqlDbType.VarChar).Value = customerModel.PinCode;
+                    command.Parameters.Add("@NetAmount", SqlDbType.Decimal).Value = customerModel.NetAmount;
 
                     command.ExecuteNonQuery();
                     return RedirectToAction("AddEditCustomer", new { CustomerID = customerModel.CustomerID });
