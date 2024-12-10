@@ -1,4 +1,4 @@
-﻿@* @model List<CRUD_Demo.Models.UserModel>  *@
+@* @model List<CRUD_Demo.Models.UserModel>  *@
 
 @model DataTable
 @using System.Data 
@@ -12,8 +12,22 @@
     <a class="btn btn-secondary" asp-controller="User" asp-action="ExportToExcel">Export To Excel</a>
 </div>
 
-<span class="text-success">@TempData["ShowMessage"]</span>
-<span class="text-danger">@TempData["ErrorMessage"]</span>
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["SuccessMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        @TempData["ErrorMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
 <table class="table table-bordered">
     <thead>
         <tr>
