@@ -1,4 +1,4 @@
-﻿@model CRUD_Demo.Models.CustomerModel
+@model CRUD_Demo.Models.CustomerModel
 
 @if (TempData["SuccessMessage"] != null)
 {
@@ -10,7 +10,7 @@
 
 <div class="card">
     <div class="card-body">
-        <h5 class="card-title">@((ViewBag.IsEditMode == true) ? "Edit Customer" : "Add New Customer")</h5>
+        <h5 class="card-title">@((bool)TempData["IsEditMode"] ? "Edit Customer" : "Add New Customer")</h5>
         <form asp-controller="Customer" asp-action="CustomerSave" method="post">
             <div class="row mb-3">
                 <input type="hidden" asp-for="CustomerID" />
@@ -72,9 +72,20 @@
             <div class="row mb-3">
                 <label class="col-sm-2 col-form-label"><span class="text-danger">*</span>UserID</label>
                 <div class="col-sm-10">
-                    <select class="form-select" asp-for="UserID" asp-items="@(new SelectList(ViewBag.UserList, "UserID", "UserName"))">
-                        <option selected value="">Select User ID</option>
-                    </select>
+                    @if ((bool)TempData["IsEditMode"])
+                    {
+                        <!-- Dropdown in edit mode (disabled) -->
+                        <select class="form-select" asp-for="UserID" asp-items="@(new SelectList(ViewBag.UserList, "UserID", "UserName"))" disabled>
+                            <option value="" selected>Select User ID</option>
+                        </select>
+                    }
+                    else
+                    {
+                        <!-- Dropdown in insert mode -->
+                        <select class="form-select" asp-for="UserID" asp-items="@(new SelectList(ViewBag.UserList, "UserID", "UserName"))">
+                            <option value="" selected>Select User ID</option>
+                        </select>
+                    }
                     <span asp-validation-for="UserID" class="text-danger"></span>
                 </div>
             </div>
@@ -82,7 +93,7 @@
                 <label class="col-sm-2 col-form-label"></label>
                 <div class="col-sm-10">
                     <button type="submit" class="btn btn-success">
-                        @((ViewBag.IsEditMode == true) ? "Edit" : "Add")
+                        @((bool)TempData["IsEditMode"] ? "Edit" : "Add")
                     </button>
                     <a class="btn btn-danger" asp-controller="Customer" asp-action="CustomerList">Back</a>
                 </div>
