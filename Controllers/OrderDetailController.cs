@@ -1,4 +1,4 @@
-﻿using CRUD_Demo.Models;
+using CRUD_Demo.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Data.SqlClient;
 using System.Data;
@@ -81,6 +81,7 @@ namespace CRUD_Demo.Controllers
                 command.CommandText = "PR_OrderDetail_DeleteByPK";
                 command.Parameters.AddWithValue("@OrderDetailID", OrderDetailID);
                 command.ExecuteNonQuery();
+                TempData["SuccessMessage"] = "Deleted successfully!";
             }
             catch (Exception ex)
             {
@@ -180,7 +181,7 @@ namespace CRUD_Demo.Controllers
 
             if(OrderDetailID != null)
             {
-                ViewBag.IsEditMode = true;
+                TempData["IsEditMode"] = true;
 
                 #region OrderDetailByID
                 string connectionString = this.configuration.GetConnectionString("ConnectionString");
@@ -207,8 +208,9 @@ namespace CRUD_Demo.Controllers
             }
             else
             {
-                ViewBag.IsEditMode = false;
+                TempData["IsEditMode"] = false;
             }
+            TempData.Keep("IsEditMode");
             return View("AddEditOrderDetail", orderDetailModel);
         }
         #endregion
@@ -266,9 +268,6 @@ namespace CRUD_Demo.Controllers
                         command.CommandText = "PR_OrderDetail_Insert";
                         command.Parameters.Add("@OrderID", SqlDbType.Int).Value = orderDetailModel.OrderID;
                         command.Parameters.Add("@ProductID", SqlDbType.Int).Value = orderDetailModel.ProductID;
-                        command.Parameters.Add("@Quantity", SqlDbType.Int).Value = orderDetailModel.Quantity;
-                        command.Parameters.Add("@Amount", SqlDbType.Decimal).Value = orderDetailModel.Amount;
-                        command.Parameters.Add("@TotalAmount", SqlDbType.Decimal).Value = orderDetailModel.TotalAmount;
                         command.Parameters.Add("@UserID", SqlDbType.Int).Value = orderDetailModel.UserID;
 
                         TempData["SuccessMessage"] = "Order Detail added successfully!";
@@ -277,12 +276,12 @@ namespace CRUD_Demo.Controllers
                     {
                         command.CommandText = "PR_OrderDetail_UpdateByPK";
                         command.Parameters.Add("@OrderDetailID", SqlDbType.Int).Value = orderDetailModel.OrderDetailID;
-                        command.Parameters.Add("@Quantity", SqlDbType.Int).Value = orderDetailModel.Quantity;
-                        command.Parameters.Add("@Amount", SqlDbType.Decimal).Value = orderDetailModel.Amount;
-                        command.Parameters.Add("@TotalAmount", SqlDbType.Decimal).Value = orderDetailModel.TotalAmount;
 
                         TempData["SuccessMessage"] = "Order Detail updated successfully!";
                     }
+                    command.Parameters.Add("@Quantity", SqlDbType.Int).Value = orderDetailModel.Quantity;
+                    command.Parameters.Add("@Amount", SqlDbType.Decimal).Value = orderDetailModel.Amount;
+                    command.Parameters.Add("@TotalAmount", SqlDbType.Decimal).Value = orderDetailModel.TotalAmount;
 
                     command.ExecuteNonQuery();
                     return RedirectToAction("AddEditOrderDetail", new { OrderDetailID = orderDetailModel.OrderDetailID });
