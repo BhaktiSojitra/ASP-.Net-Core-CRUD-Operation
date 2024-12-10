@@ -47,15 +47,15 @@ EXEC [dbo].[PR_OrderDetail_SelectByPK] 2
 -- insert
 CREATE PROCEDURE [dbo].[PR_OrderDetail_Insert]
     @OrderID INT,
-	@ProductID INT,
-	@Quantity INT,
+    @ProductID INT,
+    @Quantity INT,
     @Amount DECIMAL(10,2),
-	@TotalAmount DECIMAL(10,2),
+    @TotalAmount DECIMAL(10,2),
     @UserID INT
 AS
 BEGIN
     INSERT INTO [dbo].[LOC_OrderDetail] 
-	(
+    (
         [OrderID],
         [ProductID],
         [Quantity],
@@ -64,13 +64,13 @@ BEGIN
         [UserID]
     )
     VALUES 
-	(
+    (
         @OrderID ,
-		@ProductID ,
-		@Quantity ,
-		@Amount ,
-		@TotalAmount ,
-		@UserID
+	@ProductID ,
+	@Quantity ,
+	@Amount ,
+	@TotalAmount ,
+	@UserID
     );
 END
 
@@ -82,7 +82,7 @@ EXEC [dbo].[PR_OrderDetail_SelectAll]
 CREATE PROCEDURE [dbo].[PR_OrderDetail_UpdateByPK]
 	@OrderDetailID int ,
 	@Quantity INT,
-    @Amount DECIMAL(10,2),
+        @Amount DECIMAL(10,2),
 	@TotalAmount DECIMAL(10,2)
 AS
 BEGIN
