@@ -50,7 +50,6 @@ EXEC [dbo].[PR_Bills_SelectByPK] 3
 -- insert
 ALTER PROCEDURE [dbo].[PR_Bills_Insert]
 	@BillNumber Varchar(100),
-	@BillDate Datetime,
 	@OrderID INT,
 	@TotalAmount DECIMAL(10,2),
 	@Discount decimal(10,2) ,
@@ -71,7 +70,7 @@ BEGIN
     VALUES 
 	(
 		@BillNumber ,
-		@BillDate ,
+		getdate() ,
 		@OrderID ,
 		@TotalAmount ,
 		@Discount ,
@@ -80,7 +79,7 @@ BEGIN
     );
 END
 
-EXEC [dbo].[PR_Bills_Insert] 'B45678',3,800.00,20.00,600.00,3
+EXEC [dbo].[PR_Bills_Insert] 'B123789',3,800.00,20.00,600.00,2
 EXEC [dbo].[PR_Bills_SelectAll] 
 
 
@@ -88,7 +87,6 @@ EXEC [dbo].[PR_Bills_SelectAll]
 ALTER PROCEDURE [dbo].[PR_Bills_UpdateByPK]
 	@BillID int,
 	@BillNumber Varchar(100),
-	@BillDate DateTime,
 	@TotalAmount DECIMAL(10,2),
 	@Discount decimal(10,2),
 	@NetAmount decimal(10,2)
@@ -96,14 +94,14 @@ AS
 BEGIN
     UPDATE [dbo].[LOC_Bills]
     SET [BillNumber] = @BillNumber,
-		[BillDate] = @BillDate,
+		[BillDate] = getdate(),
         [TotalAmount] = @TotalAmount,
 		[Discount] = @Discount,
 		[NetAmount] = @NetAmount
     WHERE [dbo].[LOC_Bills].[BillID] = @BillID;
 END
 
-EXEC [dbo].[PR_Bills_UpdateByPK] 4,B34789,200.00,10.00,100.00
+EXEC [dbo].[PR_Bills_UpdateByPK] 4,'B34789',200.00,10.00,100.00
 EXEC [dbo].[PR_Bills_SelectAll] 
 
 
