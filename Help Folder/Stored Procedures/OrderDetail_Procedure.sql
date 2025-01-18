@@ -94,7 +94,7 @@ BEGIN
     WHERE [dbo].[LOC_OrderDetail].[OrderDetailID] = @OrderDetailID;
 END
 
-EXEC [dbo].[PR_OrderDetail_UpdateByPK] 5,12,59.00,60.00
+EXEC [dbo].[PR_OrderDetail_UpdateByPK] 4,12,59.00,60.00
 EXEC [dbo].[PR_OrderDetail_SelectAll] 
 
 
@@ -108,5 +108,5 @@ BEGIN
 	WHERE [dbo].[LOC_OrderDetail].[OrderDetailID] = @OrderDetailID;
 END
 
-EXEC [dbo].[PR_OrderDetail_DeleteByPK] 5
+EXEC [dbo].[PR_OrderDetail_DeleteByPK] 4
 EXEC [dbo].[PR_OrderDetail_SelectAll] 
