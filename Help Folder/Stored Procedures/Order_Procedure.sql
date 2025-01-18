@@ -48,7 +48,7 @@ exec [dbo].[PR_Order_SelectByPK] 3
 
 -- insert
 ALTER PROCEDURE [dbo].[PR_Order_Insert]
-	@OrderNumber INT,
+    @OrderNumber INT,
     @OrderDate DATETIME,
     @CustomerID INT,
     @PaymentMode VARCHAR(100),
@@ -58,8 +58,8 @@ ALTER PROCEDURE [dbo].[PR_Order_Insert]
 AS
 BEGIN
     INSERT INTO [dbo].[LOC_Order] 
-	(
-		[OrderNumber],
+    (
+	[OrderNumber],
         [OrderDate],
         [CustomerID],
         [PaymentMode],
@@ -68,8 +68,8 @@ BEGIN
         [UserID]
     )
     VALUES 
-	(
-		@OrderNumber,
+    (
+	@OrderNumber,
         @OrderDate,
         @CustomerID,
         @PaymentMode,
@@ -85,8 +85,8 @@ EXEC [dbo].[PR_Order_SelectAll]
 
 -- update
 CREATE PROCEDURE [dbo].[PR_Order_UpdateByPK]
-	@OrderID int,
-	@OrderDate DATETIME,
+    @OrderID int,
+    @OrderDate DATETIME,
     @PaymentMode VARCHAR(100),
     @TotalAmount DECIMAL(10,2),
     @ShippingAddress VARCHAR(100)
@@ -94,13 +94,13 @@ AS
 BEGIN
     UPDATE [dbo].[LOC_Order]
     SET [OrderDate] = @OrderDate,
-		[PaymentMode] = @PaymentMode,
+	[PaymentMode] = @PaymentMode,
         [TotalAmount] = @TotalAmount,
         [ShippingAddress] = @ShippingAddress
     WHERE [dbo].[LOC_Order].[OrderID] = @OrderID;
 END
 
-EXEC [dbo].[PR_Order_UpdateByPK] 4,'08-09-2024 10:22PM',1,'Pay Pal',200.00,'line 2',3
+EXEC [dbo].[PR_Order_UpdateByPK] 4,'08-09-2024 10:22PM','Pay Pal',200.00,'line 2'
 EXEC [dbo].[PR_Order_SelectAll] 
 
 
