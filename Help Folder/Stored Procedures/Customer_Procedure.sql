@@ -98,29 +98,23 @@ EXEC [dbo].[PR_Customer_SelectAll]
 -- update
 CREATE PROCEDURE [dbo].[PR_Customer_UpdateByPK]
 	@CustomerID int ,
-	@CustomerName varchar(100),
 	@HomeAddress varchar(100),
 	@Email varchar(100),
 	@MobileNo varchar(15),
-	@GSTNo varchar(15),
-	@CityName varchar(100),
 	@PinCode varchar(15),
 	@NetAmount decimal(10,2)
 AS
 BEGIN
     UPDATE [dbo].[LOC_Customer]
-    SET [CustomerName]  = @CustomerName,
-		[HomeAddress] = @HomeAddress,
-		[Email] = @Email,
-		[MobileNo] = @MobileNo,
-		[GSTNo] = @GSTNo,
-		[CityName] = @CityName,
-		[PinCode] = @PinCode,
-		[NetAmount] = @NetAmount
+    SET [HomeAddress] = @HomeAddress,
+	[Email] = @Email,
+	[MobileNo] = @MobileNo,
+	[PinCode] = @PinCode,
+	[NetAmount] = @NetAmount
     WHERE [dbo].[LOC_Customer].[CustomerID] = @CustomerID;
 END
 
-EXEC [dbo].[PR_Customer_UpdateByPK] 4,'bhakti','line2','sojitrabhakti03@gmail.com','9925142078','GST88208','USA','36200',2000.50
+EXEC [dbo].[PR_Customer_UpdateByPK] 4,'line2','sojitrabhakti03@gmail.com','9925142078',361006,200
 EXEC [dbo].[PR_Customer_SelectAll] 
 
 
