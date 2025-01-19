@@ -13,6 +13,7 @@
         <h5 class="card-title">@((bool)TempData["IsEditMode"] ? "Edit Order" : "Add New Order")</h5>
         <form asp-controller="Order" asp-action="OrderSave" method="post">
             <div class="row mb-3">
+                <input type="hidden" asp-for="OrderID" />
                 <label class="col-sm-2 col-form-label"><span class="text-danger">*</span>Order Number</label>
                 <div class="col-sm-10">
                     @if ((bool)TempData["IsEditMode"]) // edit mode
@@ -27,7 +28,6 @@
                 </div>
             </div>
             <div class="row mb-3">
-                <input type="hidden" asp-for="OrderID" />
                 <label class="col-sm-2 col-form-label"><span class="text-danger">*</span>Order Date</label>
                 <div class="col-sm-10">
                     <input type="datetime-local" class="form-control" asp-for="OrderDate">
